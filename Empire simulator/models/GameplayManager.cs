@@ -8,22 +8,25 @@ namespace Empire_simulator.models
 {
     class GameplayManager
     {
+        int timeCount = 0;
         bool continuePlaying = true;
         GameplayPage page;
-        object locker = new();
 
         public GameplayManager(GameplayPage _page) {
             page = _page;
         }
 
         public void StartGame() {
-            bool curentState;
-            do {
+            while (continuePlaying) {
                 Thread.Sleep(2000);
                 page.Dispatcher.Invoke(new Action(() => {
-                    page.AddMessage("123");
+                    MakeTurn();
                 }));
-            } while (continuePlaying);
+            }
+        }
+
+        public void MakeTurn() {
+            page.SetTimeCounter(++timeCount);
         }
 
         public void StopGame() {

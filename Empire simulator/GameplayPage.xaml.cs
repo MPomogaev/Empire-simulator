@@ -20,6 +20,10 @@ namespace Empire_simulator {
             gameplayThread.Start();
         }
 
+        public void SetTimeCounter(int count) {
+            TimeCounterLabel.Content = count.ToString();
+        }
+
         public void AddMessage(string msg) {
             Label newMsg = new();
             newMsg.Content = msg;
