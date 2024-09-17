@@ -1,7 +1,7 @@
-﻿<Application x:Class="Empire_simulator.App"
+﻿<Application x:Class="EmpireSimulator.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Empire_simulator"
+             xmlns:local="clr-namespace:EmpireSimulator"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

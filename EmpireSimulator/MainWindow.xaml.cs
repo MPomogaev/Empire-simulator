@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Navigation;
 
-namespace Empire_simulator {
+namespace EmpireSimulator {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

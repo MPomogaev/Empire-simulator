@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace Empire_simulator {
+namespace EmpireSimulator {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
