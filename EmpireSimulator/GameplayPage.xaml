@@ -13,6 +13,11 @@
             <Setter Property="BorderThickness" Value="3px" />
             <Setter Property="BorderBrush" Value="Black" />
         </Style>
+        <Style TargetType="Label" x:Key="labelStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -56,28 +61,35 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="PopulationManagementPanel">
-                <Grid.RowDefinitions>
-                    <RowDefinition MinHeight="30px"/>
-                    <RowDefinition MinHeight="25px"/>
-                    <RowDefinition MinHeight="20px"/>
-                    <RowDefinition MinHeight="25px"/>
-                    <RowDefinition MinHeight="20px"/>
-                    <RowDefinition MinHeight="25px"/>
-                    <RowDefinition MinHeight="20px"/>
-                    <RowDefinition MinHeight="25px"/>
-                    <RowDefinition MinHeight="20px"/>
-                </Grid.RowDefinitions>
-                <UniformGrid Columns="2">
-                    <interface:NamedCounter x:Name="AllWorkersCounter" CounterName="Всего:"/>
-                    <interface:NamedCounter x:Name="FreeWorkersCounter" CounterName="Свободно:"/>
-                </UniformGrid>
-                <interface:ProgressBar x:Name="FoodBar" ProgressBarName="Eда" Grid.Row="1" Grid.Column="1" Color="Green"/>
-                <interface:ProgressBar x:Name="ProductionBar" ProgressBarName="Производство" Grid.Row="3" Grid.Column="1" Color="Orange"/>
-                <interface:ProgressBar x:Name="MoneyBar" ProgressBarName="Деньги" Grid.Row="5" Grid.Column="1" Color="Yellow"/>
-                <interface:ProgressBar x:Name="ScienceBar" ProgressBarName="Наука" Grid.Row="7" Grid.Column="1" Color="Blue"/>
-            </Grid>
-            <Border Style="{StaticResource panelBorder}" Grid.ColumnSpan="2"/>
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="30px"/>
+                <RowDefinition MinHeight="25px"/>
+                <RowDefinition MinHeight="20px"/>
+                <RowDefinition MinHeight="25px"/>
+                <RowDefinition MinHeight="20px"/>
+                <RowDefinition MinHeight="25px"/>
+                <RowDefinition MinHeight="20px"/>
+                <RowDefinition MinHeight="25px"/>
+                <RowDefinition MinHeight="20px"/>
+            </Grid.RowDefinitions>
+            <UniformGrid Columns="2">
+                <interface:NamedCounter x:Name="AllWorkersCounter" CounterName="Всего:"/>
+                <interface:NamedCounter x:Name="FreeWorkersCounter" CounterName="Свободно:"/>
+            </UniformGrid>
+            <interface:ProgressBar x:Name="FoodBar" ProgressBarName="Eда" Grid.Row="1" Color="Green"/>
+            <interface:ProgressBar x:Name="ProductionBar" ProgressBarName="Производство" Grid.Row="3" Color="Orange"/>
+            <interface:ProgressBar x:Name="MoneyBar" ProgressBarName="Деньги" Grid.Row="5" Color="Gold"/>
+            <interface:ProgressBar x:Name="ScienceBar" ProgressBarName="Наука" Grid.Row="7" Color="Blue"/>
+            <Border Style="{StaticResource panelBorder}" Grid.ColumnSpan="3" Grid.RowSpan="9"/>
+            <UniformGrid Columns="3" Grid.Column="1">
+                <Label Style="{StaticResource labelStyle}" Content="Приток"/>
+                <Label Style="{StaticResource labelStyle}" Content="Склад"/>
+                <Label Style="{StaticResource labelStyle}" Content="Вместимость"/>
+            </UniformGrid>
+            <interface:ResourseCounter Grid.Column="1" Grid.Row="1" x:Name="FoodResourseCounter" Color="Green"/>
+            <interface:ResourseCounter Grid.Column="1" Grid.Row="3" x:Name="ProductionResourseCounter" Color="Orange"/>
+            <interface:ResourseCounter Grid.Column="1" Grid.Row="5" x:Name="MoneyResourseCounter" Color="Gold"/>
+            <interface:ResourseCounter Grid.Column="1" Grid.Row="7" x:Name="ScienceResourseCounter" Color="Blue"/>
         </Grid>
     </Grid>
 </Page>

@@ -1,32 +1,37 @@
 ﻿using EmpireSimulator.Data;
+using EmpireSimulator.Models.Resourses;
+using EmpireSimulator.Models.Workers;
+using System.Reflection.Emit;
 using System.Security.Cryptography;
 
 namespace EmpireSimulator.Models
 {
     class GameplayManager
     {
-        int timeCount = 0;
-        bool continuePlaying = true;
-        GameplayPage page;
-        WorkerContext workerContext = new();
+        int TimeCount = 0;
+        bool ContinuePlaying = true;
+        GameplayPage Page;
+        WorkerContext NewWorkerContext = new();
+        WorkerContext CurentWorkerContext = new();
+        ResoursesContext ResoursesContext = new();
 
-        public GameplayManager(GameplayPage _page) {
-            page = _page;
+        public GameplayManager(GameplayPage _Page) {
+            Page = _Page;
         }
 
-        public int FreeWorkerCount { get { return workerContext.FreeWorkersCount; } }
-        public int AllWorkerCount { get { return workerContext.AllWorkersCount; } }
+        public int FreeWorkerCount { get { return NewWorkerContext.FreeWorkersCount; } }
+        public int AllWorkerCount { get { return NewWorkerContext.AllWorkersCount; } }
 
         public async void StartGameAsync() {
             try {
-                page.Dispatcher.Invoke(new(() => UpdateGui()));
-                while (continuePlaying) {
-                    var waitTask = Task.Delay(2000);
-                    MakeTurn();
-                    await waitTask;
-                    page.Dispatcher.Invoke(new(() => {
+                while (ContinuePlaying) {
+                    Page.Dispatcher.Invoke(() => {
                         UpdateGui();
-                    }));
+                        GetNextTurnData();
+                    });
+                    var nextTurnDelay = Task.Delay(2000);
+                    MakeTurn();
+                    await nextTurnDelay;
                 }
             } catch (TaskCanceledException ex) {
                 //throw ex;
@@ -34,39 +39,45 @@ namespace EmpireSimulator.Models
             }
         }
 
-        public void MakeTurn() {
-            ++timeCount;
-        }
-
-        public void UpdateGui() {
-            page.SetTimeCounter(timeCount);
-            page.SetProgressBars(workerContext);
-        }
-
         public bool TryAddWorker(ResourseType resourse) {
-            var workers = workerContext.GetWorkers(resourse);
-            var maxWorkers = workerContext.GetMaxWorkers(resourse);
-            if (workerContext.FreeWorkersCount > 0 && maxWorkers > workers) {
-                workerContext.SetWorkers(resourse, workers + 1);
-                workerContext.FreeWorkersCount -= 1;
+            var workers = NewWorkerContext[resourse].Count;
+            var maxWorkers = NewWorkerContext[resourse].MaxCount;
+            if (NewWorkerContext.FreeWorkersCount > 0 && maxWorkers > workers) {
+                NewWorkerContext[resourse].Count += 1;
+                NewWorkerContext.FreeWorkersCount -= 1;
                 return true;
             }
             return false;
         }
 
         public bool TryRemoveWorker(ResourseType resourse) {
-            var workers = workerContext.GetWorkers(resourse);
-            var maxWorkers = workerContext.GetMaxWorkers(resourse);
+            var workers = NewWorkerContext[resourse].Count;
+            var maxWorkers = NewWorkerContext[resourse].MaxCount;
             if (workers > 0) {
-                workerContext.SetWorkers(resourse, workers - 1);
-                workerContext.FreeWorkersCount += 1;
+                NewWorkerContext[resourse].Count -= 1;
+                NewWorkerContext.FreeWorkersCount += 1;
                 return true;
             }
             return false;
         }
 
         public void StopGame() {
-            continuePlaying = false;
+            ContinuePlaying = false;
+        }
+
+        private void MakeTurn() {
+            ++TimeCount;
+            ResoursesContext.UpdateResourses(CurentWorkerContext);
+        }
+
+        private void UpdateGui() {
+            Page.SetTimeCounter(TimeCount);
+            Page.SetProgressBars(NewWorkerContext);
+            Page.SetResourses(ResoursesContext);
+        }
+
+        private void GetNextTurnData() {
+            CurentWorkerContext.Copy(NewWorkerContext);
         }
     }
 }
