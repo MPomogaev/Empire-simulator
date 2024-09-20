@@ -94,7 +94,7 @@ namespace EmpireSimulator
             this.NavigationService.Navigate(menuPage);
         }
 
-        private void SetWorkerCount() {
+        public void SetWorkerCount() {
             FreeWorkersCounter.Counter = gameplayManager.FreeWorkerCount;
             AllWorkersCounter.Counter = gameplayManager.AllWorkerCount;
         }

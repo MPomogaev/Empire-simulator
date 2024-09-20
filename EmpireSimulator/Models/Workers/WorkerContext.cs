@@ -1,6 +1,5 @@
 ﻿using EmpireSimulator.Data;
 using EmpireSimulator.Models.Resourses;
-using System.Reflection.Metadata;
 
 namespace EmpireSimulator.Models.Workers
 {
@@ -21,6 +20,24 @@ namespace EmpireSimulator.Models.Workers
             }
             FreeWorkersCount = other.FreeWorkersCount;
             AllWorkersCount = other.AllWorkersCount;
+        }
+
+        public bool RemovePopulation() {
+            if (FreeWorkersCount > 0) {
+                FreeWorkersCount--;
+                AllWorkersCount--;
+                return true;
+            }
+            var workedResourses = Workers
+                .Where(wrk => wrk.Value.Count > 0)
+                .Select(wrk => wrk.Key).ToList();
+            if (workedResourses.Count > 0) {
+                var resourse = RandomResourse.Next(workedResourses);
+                Workers[resourse].Count--;
+                AllWorkersCount--;
+                return true;
+            }
+            return false;
         }
 
         public int FreeWorkersCount { get; set; } = 10;

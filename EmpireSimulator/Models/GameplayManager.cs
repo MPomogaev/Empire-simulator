@@ -8,19 +8,27 @@ namespace EmpireSimulator.Models
 {
     class GameplayManager
     {
-        int TimeCount = 0;
         bool ContinuePlaying = true;
         GameplayPage Page;
-        WorkerContext NewWorkerContext = new();
-        WorkerContext CurentWorkerContext = new();
-        ResoursesContext ResoursesContext = new();
+        GameplayContext context = new();
 
         public GameplayManager(GameplayPage _Page) {
             Page = _Page;
+            context.eventContext.SetPossibleEvents(context);
         }
 
-        public int FreeWorkerCount { get { return NewWorkerContext.FreeWorkersCount; } }
-        public int AllWorkerCount { get { return NewWorkerContext.AllWorkersCount; } }
+        public int FreeWorkerCount { get {
+                lock (context.newWorkerContext) {
+                    return context.newWorkerContext.FreeWorkersCount;
+                }
+            } 
+        }
+        public int AllWorkerCount { get {
+                lock (context.newWorkerContext) {
+                    return context.newWorkerContext.AllWorkersCount;
+                }
+            }
+        }
 
         public async void StartGameAsync() {
             try {
@@ -40,25 +48,29 @@ namespace EmpireSimulator.Models
         }
 
         public bool TryAddWorker(ResourseType resourse) {
-            var workers = NewWorkerContext[resourse].Count;
-            var maxWorkers = NewWorkerContext[resourse].MaxCount;
-            if (NewWorkerContext.FreeWorkersCount > 0 && maxWorkers > workers) {
-                NewWorkerContext[resourse].Count += 1;
-                NewWorkerContext.FreeWorkersCount -= 1;
-                return true;
+            lock (context.newWorkerContext) {
+                var workers = context.newWorkerContext[resourse].Count;
+                var maxWorkers = context.newWorkerContext[resourse].MaxCount;
+                if (context.newWorkerContext.FreeWorkersCount > 0 && maxWorkers > workers) {
+                    context.newWorkerContext[resourse].Count += 1;
+                    context.newWorkerContext.FreeWorkersCount -= 1;
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
 
         public bool TryRemoveWorker(ResourseType resourse) {
-            var workers = NewWorkerContext[resourse].Count;
-            var maxWorkers = NewWorkerContext[resourse].MaxCount;
-            if (workers > 0) {
-                NewWorkerContext[resourse].Count -= 1;
-                NewWorkerContext.FreeWorkersCount += 1;
-                return true;
+            lock (context.newWorkerContext) {
+                var workers = context.newWorkerContext[resourse].Count;
+                var maxWorkers = context.newWorkerContext[resourse].MaxCount;
+                if (workers > 0) {
+                    context.newWorkerContext[resourse].Count -= 1;
+                    context.newWorkerContext.FreeWorkersCount += 1;
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
 
         public void StopGame() {
@@ -66,18 +78,20 @@ namespace EmpireSimulator.Models
         }
 
         private void MakeTurn() {
-            ++TimeCount;
-            ResoursesContext.UpdateResourses(CurentWorkerContext);
+            context.turnCounter.NextTurn();
+            context.eventContext.Happen();
         }
 
         private void UpdateGui() {
-            Page.SetTimeCounter(TimeCount);
-            Page.SetProgressBars(NewWorkerContext);
-            Page.SetResourses(ResoursesContext);
+            Page.SetTimeCounter(context.turnCounter.Count);
+            Page.SetProgressBars(context.newWorkerContext);
+            context.resoursesContext.UpdateResourses(context.newWorkerContext);
+            Page.SetResourses(context.resoursesContext);
+            Page.SetWorkerCount();
         }
 
         private void GetNextTurnData() {
-            CurentWorkerContext.Copy(NewWorkerContext);
+            context.curentWorkerContext.Copy(context.newWorkerContext);
         }
     }
 }

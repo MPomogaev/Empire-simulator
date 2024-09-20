@@ -6,17 +6,29 @@ namespace EmpireSimulator.Models.Resourses
         private static readonly int BaseWorkerOutput = 2;
         private static readonly int BaseWorkerConsuption = 1;
 
+        public event EventHandler Starvation;
+        protected virtual void OnStarvation() {
+            Starvation?.Invoke(this, EventArgs.Empty);
+        }
+
         public override int CalculateInflow(WorkerContext workerContext) {
             return BaseWorkerOutput * workerContext[ResourseType.Food].Count
                 - GetConsuption(workerContext);
         }
 
         public override void NextTurnUpdate(WorkerContext workerContext) {
+            StorageUpdate(workerContext);
+            _Inflow = CalculateInflow(workerContext);
+        }
+
+        private void StorageUpdate(WorkerContext workerContext) {
             _StorageCapacity += _Inflow;
             if (_StorageCapacity > MaxStorageCapacity) {
                 _StorageCapacity = MaxStorageCapacity.Value;
             }
-            _Inflow = CalculateInflow(workerContext);
+            if (_StorageCapacity < 0) {
+                OnStarvation();
+            }
         }
 
         private int GetConsuption(WorkerContext workerContext) {
