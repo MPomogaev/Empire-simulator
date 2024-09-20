@@ -8,6 +8,7 @@ namespace EmpireSimulator.Models.Resourses
 
         public MoneyResourse() {
             _MaxStorageCapacity = 1000;
+            _StorageCapacity = 100;
         }
 
         public override int CalculateInflow(WorkerContext workerContext) {

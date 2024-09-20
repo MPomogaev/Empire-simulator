@@ -88,6 +88,9 @@ namespace EmpireSimulator.Models
             context.resoursesContext.UpdateResourses(context.newWorkerContext);
             Page.SetResourses(context.resoursesContext);
             Page.SetWorkerCount();
+            foreach(var _event in context.eventContext.HappendEvents) {
+                Page.AddEventMessage(_event);
+            }
         }
 
         private void GetNextTurnData() {

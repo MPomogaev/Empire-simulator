@@ -7,5 +7,7 @@ namespace EmpireSimulator.Models.GameEvents {
         public virtual string? Description { get => null; }
         public virtual int Id { get => _id; }
         protected int _id;
+        public virtual EventType Type { get => _type; }
+        protected EventType _type = EventType.Neutral;
     }
 }

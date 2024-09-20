@@ -4,9 +4,12 @@ namespace EmpireSimulator.Models.GameEvents {
         private List<AbstractEvent> possibleEvents = new() {
             new StarvationDeathEvent(),
         };
+        private List<AbstractEvent> happendEvents = new();
         private Dictionary<int, AbstractEvent> events = new();
         private List<int> unusedIds = new List<int>();
         private int maxId = 0;
+
+        public List<AbstractEvent> HappendEvents { get => happendEvents; }
 
         public int AddEvent(AbstractEvent newEvent) {
             int id = ChooseId();
@@ -19,8 +22,10 @@ namespace EmpireSimulator.Models.GameEvents {
         }
 
         public void Happen() {
+            happendEvents.Clear();
             foreach(var _event in events.ToList()) {
                 _event.Value.Happen();
+                happendEvents.Add(_event.Value);
             }
         }
 

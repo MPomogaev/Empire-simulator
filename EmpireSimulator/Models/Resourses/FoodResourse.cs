@@ -6,6 +6,10 @@ namespace EmpireSimulator.Models.Resourses
         private static readonly int BaseWorkerOutput = 2;
         private static readonly int BaseWorkerConsuption = 1;
 
+        public FoodResourse() {
+            _StorageCapacity = 30;
+        }
+
         public event EventHandler Starvation;
         protected virtual void OnStarvation() {
             Starvation?.Invoke(this, EventArgs.Empty);

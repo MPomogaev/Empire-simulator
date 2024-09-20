@@ -19,8 +19,10 @@ namespace EmpireSimulator.Models.GameEvents {
             };
         }
 
-        public override string? Name => "Голодная смерть!";
+        public override string? Name => "Голод!";
 
         public override string? Description => "1 ед. населения умерла от голода(";
+
+        public override EventType Type => EventType.Negative;
     }
 }

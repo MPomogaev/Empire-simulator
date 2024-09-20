@@ -5,6 +5,8 @@ using EmpireSimulator.Data;
 using System.Reflection;
 using EmpireSimulator.Models.Resourses;
 using EmpireSimulator.Models.Workers;
+using EmpireSimulator.Models.GameEvents;
+using EmpireSimulator.InterfaceObjects;
 
 namespace EmpireSimulator
 {
@@ -60,10 +62,12 @@ namespace EmpireSimulator
             });
         }
 
-        public void AddMsg(string msg) {
-            Label msgLabel = new();
-            msgLabel.Content = msg;
-            MessagesPanel.Children.Add(msgLabel);
+        public void AddEventMessage(AbstractEvent _event) {
+            var entry = new EventMessage();
+            entry.EventName = _event.Name;
+            entry.EventDescription = _event.Description;
+            entry.TypeColor = Constants.EventBrushes[_event.Type];
+            MessagesStack.Children.Add(entry);
         }
 
         public void SetTimeCounter(int count) {

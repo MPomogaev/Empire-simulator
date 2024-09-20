@@ -1,4 +1,6 @@
 ﻿using EmpireSimulator.Models.Resourses;
+using EmpireSimulator.Models.GameEvents;
+using System.Windows.Media;
 
 namespace EmpireSimulator.Data
 {
@@ -8,6 +10,12 @@ namespace EmpireSimulator.Data
             ResourseType.Production,
             ResourseType.Money,
             ResourseType.Science
+        };
+
+        public static readonly Dictionary<EventType, Brush> EventBrushes = new() {
+            { EventType.Neutral, BrushConverter.GetBrushFromColorString("Black")},
+            { EventType.Negative, BrushConverter.GetBrushFromColorString("Red")},
+            { EventType.Positive, BrushConverter.GetBrushFromColorString("Green")},
         };
     }
 }
