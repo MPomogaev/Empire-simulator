@@ -6,6 +6,12 @@ namespace EmpireSimulator.Models {
 
         public void NextTurn() {
             _count++;
+            OnNextTurn();
+        }
+
+        public event EventHandler NextTurnEvent;
+        protected void OnNextTurn() {
+            NextTurnEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 }

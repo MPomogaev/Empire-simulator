@@ -1,25 +1,23 @@
 ﻿using EmpireSimulator.Data;
+using EmpireSimulator.Models.GameEvents;
 using EmpireSimulator.Models.Resourses;
-using EmpireSimulator.Models.Workers;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
 
 namespace EmpireSimulator.Models
 {
-    class GameplayManager
+    public class GameplayManager
     {
-        bool ContinuePlaying = true;
         GameplayPage Page;
-        GameplayContext context = new();
+        GameplayContext context;
 
         public GameplayManager(GameplayPage _Page) {
             Page = _Page;
+            context = new(this);
             context.eventContext.SetPossibleEvents(context);
         }
 
-        public int FreeWorkerCount { get {
+        public int AvailableWorkerCount { get {
                 lock (context.newWorkerContext) {
-                    return context.newWorkerContext.FreeWorkersCount;
+                    return context.newWorkerContext.AvailableWorkersCount;
                 }
             } 
         }
@@ -29,10 +27,17 @@ namespace EmpireSimulator.Models
                 }
             }
         }
+        public int UnavailableWorkerCount {
+            get {
+                lock (context.newWorkerContext) {
+                    return context.newWorkerContext.UnavailableWorkersCount;
+                }
+            }
+        }
 
         public async void StartGameAsync() {
             try {
-                while (ContinuePlaying) {
+                while (context.continuePlaying) {
                     Page.Dispatcher.Invoke(() => {
                         UpdateGui();
                         GetNextTurnData();
@@ -41,6 +46,9 @@ namespace EmpireSimulator.Models
                     MakeTurn();
                     await nextTurnDelay;
                 }
+                Page.Dispatcher.Invoke(() => {
+                    Page.AddMessage(Constants.GameEndedMessage);
+                });
             } catch (TaskCanceledException ex) {
                 //throw ex;
                 //need to emplement logging
@@ -51,9 +59,9 @@ namespace EmpireSimulator.Models
             lock (context.newWorkerContext) {
                 var workers = context.newWorkerContext[resourse].Count;
                 var maxWorkers = context.newWorkerContext[resourse].MaxCount;
-                if (context.newWorkerContext.FreeWorkersCount > 0 && maxWorkers > workers) {
+                if (context.newWorkerContext.AvailableWorkersCount > 0 && maxWorkers > workers) {
                     context.newWorkerContext[resourse].Count += 1;
-                    context.newWorkerContext.FreeWorkersCount -= 1;
+                    context.newWorkerContext.AvailableWorkersCount -= 1;
                     return true;
                 }
                 return false;
@@ -66,7 +74,7 @@ namespace EmpireSimulator.Models
                 var maxWorkers = context.newWorkerContext[resourse].MaxCount;
                 if (workers > 0) {
                     context.newWorkerContext[resourse].Count -= 1;
-                    context.newWorkerContext.FreeWorkersCount += 1;
+                    context.newWorkerContext.AvailableWorkersCount += 1;
                     return true;
                 }
                 return false;
@@ -74,7 +82,7 @@ namespace EmpireSimulator.Models
         }
 
         public void StopGame() {
-            ContinuePlaying = false;
+            context.continuePlaying = false;
         }
 
         private void MakeTurn() {
@@ -83,12 +91,17 @@ namespace EmpireSimulator.Models
         }
 
         private void UpdateGui() {
-            Page.SetTimeCounter(context.turnCounter.Count);
+            int turn = context.turnCounter.Count;
+            Page.SetTimeCounter(turn);
             Page.SetProgressBars(context.newWorkerContext);
             context.resoursesContext.UpdateResourses(context.newWorkerContext);
             Page.SetResourses(context.resoursesContext);
             Page.SetWorkerCount();
-            foreach(var _event in context.eventContext.HappendEvents) {
+            var events = context.eventContext.HappendEvents;
+            if (events.Count > 0) {
+                Page.AddNewTurn(turn);
+            }
+            foreach (var _event in events) {
                 Page.AddEventMessage(_event);
             }
         }

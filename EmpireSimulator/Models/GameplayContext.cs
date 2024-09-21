@@ -9,5 +9,12 @@ namespace EmpireSimulator.Models {
         public ResoursesContext resoursesContext = new();
         public EventContext eventContext = new();
         public TurnCounter turnCounter = new();
+        public bool continuePlaying = true;
+        private GameplayManager _manager;
+        public GameplayManager Manager { get { return _manager; } }
+
+        public GameplayContext(GameplayManager manager) {
+            _manager = manager;
+        }
     }
 }

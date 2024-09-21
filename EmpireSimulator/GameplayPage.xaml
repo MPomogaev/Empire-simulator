@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:EmpireSimulator"
       xmlns:interface="clr-namespace:EmpireSimulator.InterfaceObjects"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="1000"
+      d:DesignHeight="800" d:DesignWidth="1200"
       Title="Gameplay">
     <Page.Resources>
         <Style TargetType="Border" x:Key="panelBorder">
@@ -67,10 +67,16 @@
                 <RowDefinition MinHeight="25px"/>
                 <RowDefinition MinHeight="20px"/>
             </Grid.RowDefinitions>
-            <UniformGrid Columns="2">
-                <interface:NamedCounter x:Name="AllWorkersCounter" CounterName="Всего:"/>
-                <interface:NamedCounter x:Name="FreeWorkersCounter" CounterName="Свободно:"/>
-            </UniformGrid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <interface:NamedCounter Grid.Column="0" x:Name="AllWorkersCounter" CounterName="Всего"/>
+                <interface:NamedCounter Grid.Column="1" x:Name="AvailableWorkersCounter" CounterName="Доступны"/>
+                <interface:NamedCounter Grid.Column="2" x:Name="UnavailableWorkersCounter" CounterName="Недоступны"/>
+            </Grid>
             <interface:ProgressBar x:Name="FoodBar" ProgressBarName="Eда" Grid.Row="1" Color="Green"/>
             <interface:ProgressBar x:Name="ProductionBar" ProgressBarName="Производство" Grid.Row="3" Color="Orange"/>
             <interface:ProgressBar x:Name="MoneyBar" ProgressBarName="Деньги" Grid.Row="5" Color="Gold"/>

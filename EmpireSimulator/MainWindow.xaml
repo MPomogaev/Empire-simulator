@@ -5,5 +5,5 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EmpireSimulator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000" Source="MenuPage.xaml" ShowsNavigationUI="False">
+        Title="MainWindow" Height="800" Width="1200" Source="MenuPage.xaml" ShowsNavigationUI="False">
 </NavigationWindow>

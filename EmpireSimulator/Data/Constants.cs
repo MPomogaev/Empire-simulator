@@ -17,5 +17,7 @@ namespace EmpireSimulator.Data
             { EventType.Negative, BrushConverter.GetBrushFromColorString("Red")},
             { EventType.Positive, BrushConverter.GetBrushFromColorString("Green")},
         };
+
+        public static readonly string GameEndedMessage = "Конец";
     }
 }

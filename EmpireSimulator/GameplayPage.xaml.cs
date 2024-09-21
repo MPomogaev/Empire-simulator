@@ -70,8 +70,21 @@ namespace EmpireSimulator
             MessagesStack.Children.Add(entry);
         }
 
+        public void AddMessage(string msg) {
+            Label entry = new Label();
+            entry.Style = this.FindResource("labelStyle") as Style;
+            entry.FontSize = 20;
+            entry.Content = msg;
+            entry.Margin = new Thickness(5);
+            MessagesStack.Children.Add(entry);
+        }
+
         public void SetTimeCounter(int count) {
             TimeCounter.Counter = count;
+        }
+
+        public void AddNewTurn(int turn) {
+            AddMessage("Ход " + turn);
         }
 
         public void SetProgressBars(WorkerContext context) {
@@ -99,8 +112,9 @@ namespace EmpireSimulator
         }
 
         public void SetWorkerCount() {
-            FreeWorkersCounter.Counter = gameplayManager.FreeWorkerCount;
+            AvailableWorkersCounter.Counter = gameplayManager.AvailableWorkerCount;
             AllWorkersCounter.Counter = gameplayManager.AllWorkerCount;
+            UnavailableWorkersCounter.Counter = gameplayManager.UnavailableWorkerCount;
         }
 
     }

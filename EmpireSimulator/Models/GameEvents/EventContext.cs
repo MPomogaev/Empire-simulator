@@ -3,6 +3,9 @@ namespace EmpireSimulator.Models.GameEvents {
     public class EventContext {
         private List<AbstractEvent> possibleEvents = new() {
             new StarvationDeathEvent(),
+            new GameEndedEvent(),
+            new PopulationGrowthEvent(),
+            new WorkerStrinkeEvent(),
         };
         private List<AbstractEvent> happendEvents = new();
         private Dictionary<int, AbstractEvent> events = new();

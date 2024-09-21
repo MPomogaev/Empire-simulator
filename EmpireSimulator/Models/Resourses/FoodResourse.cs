@@ -16,13 +16,20 @@ namespace EmpireSimulator.Models.Resourses
         }
 
         public override int CalculateInflow(WorkerContext workerContext) {
-            return BaseWorkerOutput * workerContext[ResourseType.Food].Count
-                - GetConsuption(workerContext);
+            return GetProduction(workerContext) - GetConsuption(workerContext);
         }
 
         public override void NextTurnUpdate(WorkerContext workerContext) {
             StorageUpdate(workerContext);
             _Inflow = CalculateInflow(workerContext);
+        }
+
+        public int GetConsuption(WorkerContext workerContext) {
+            return BaseWorkerConsuption * workerContext.AllWorkersCount;
+        }
+
+        public int GetProduction(WorkerContext workerContext) {
+            return BaseWorkerOutput * workerContext[ResourseType.Food].Count;
         }
 
         private void StorageUpdate(WorkerContext workerContext) {
@@ -31,12 +38,9 @@ namespace EmpireSimulator.Models.Resourses
                 _StorageCapacity = MaxStorageCapacity.Value;
             }
             if (_StorageCapacity < 0) {
+                _StorageCapacity = 0;
                 OnStarvation();
             }
-        }
-
-        private int GetConsuption(WorkerContext workerContext) {
-            return BaseWorkerConsuption * workerContext.AllWorkersCount;
         }
     }
 }
