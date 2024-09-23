@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="EmpireSimulator.InterfaceObjects.EffectMessage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EmpireSimulator.InterfaceObjects"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="labelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <Label x:Name="EffectNameLabel" Content="123" Style="{StaticResource labelStyle}"/>
+        <Label x:Name="DurationCountLabel" Content="123" Style="{StaticResource labelStyle}"/>
+    </StackPanel>
+</UserControl>

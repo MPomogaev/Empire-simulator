@@ -11,7 +11,7 @@ namespace EmpireSimulator.Models.Resourses
             _StorageCapacity = 100;
         }
 
-        public override int CalculateInflow(WorkerContext workerContext) {
+        protected override int CalculateBaseInflow(WorkerContext workerContext) {
             return GetProduction(workerContext) - GetConsuption(workerContext);
         }
 

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using EmpireSimulator.Models;
 using EmpireSimulator.Data;
-using System.Reflection;
+using EmpireSimulator.Models.GameEffects;
 using EmpireSimulator.Models.Resourses;
 using EmpireSimulator.Models.Workers;
 using EmpireSimulator.Models.GameEvents;
@@ -113,8 +113,16 @@ namespace EmpireSimulator
 
         public void SetWorkerCount() {
             AvailableWorkersCounter.Counter = gameplayManager.AvailableWorkerCount;
-            AllWorkersCounter.Counter = gameplayManager.AllWorkerCount;
-            UnavailableWorkersCounter.Counter = gameplayManager.UnavailableWorkerCount;
+            InfoPanel.AllPopulationCount = gameplayManager.AllWorkerCount;
+            InfoPanel.UnavailablePopulationCount = gameplayManager.UnavailableWorkerCount;
+        }
+
+        public void SetEffect(AbstractEffect effect) {
+            InfoPanel.SetEffect(effect);
+        }
+
+        public void RemoveEffect(AbstractEffect effect) {
+            InfoPanel.RemoveEffect(effect);
         }
 
     }

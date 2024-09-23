@@ -15,7 +15,7 @@ namespace EmpireSimulator.Models.Resourses
             Starvation?.Invoke(this, EventArgs.Empty);
         }
 
-        public override int CalculateInflow(WorkerContext workerContext) {
+        protected override int CalculateBaseInflow(WorkerContext workerContext) {
             return GetProduction(workerContext) - GetConsuption(workerContext);
         }
 

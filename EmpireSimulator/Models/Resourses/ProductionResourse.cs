@@ -5,7 +5,7 @@ namespace EmpireSimulator.Models.Resourses
     public class ProductionResourse: AbstractResourse {
         private static readonly int BaseWorkerOutput = 1;
 
-        public override int CalculateInflow(WorkerContext workerContext) {
+        protected override int CalculateBaseInflow(WorkerContext workerContext) {
             return BaseWorkerOutput * workerContext[ResourseType.Production].Count;
         }
 

@@ -10,7 +10,7 @@ namespace EmpireSimulator.Models.GameEvents {
             lock(_gameplayContext.newWorkerContext) {
                 _gameplayContext.newWorkerContext.AvailableWorkersCount++;
             }
-            RemoveFromEventList();
+            _gameplayContext.eventContext.RemoveEvent(Id);
         }
 
         public override void SetEventListener(GameplayContext gameplayContext) {

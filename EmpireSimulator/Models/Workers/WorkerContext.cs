@@ -15,6 +15,20 @@ namespace EmpireSimulator.Models.Workers
 
         private readonly double unavailabelChosenChance = 1.0/6;
 
+        public int UnavailableWorkersCount { get; set; } = 0;
+
+        public int AvailableWorkersCount { get; set; } = 10;
+
+        public int AllWorkersCount {
+            get {
+                int sum = AvailableWorkersCount + UnavailableWorkersCount;
+                foreach (var worker in Workers) {
+                    sum += worker.Value.Count;
+                }
+                return sum;
+            }
+        }
+
         public void Copy(WorkerContext other)
         {   
             Workers = new();
@@ -25,14 +39,16 @@ namespace EmpireSimulator.Models.Workers
             UnavailableWorkersCount = other.UnavailableWorkersCount;
         }
 
-        public void RemovePopulation(int count) {
-            while (count > 0) {
+        public int RemovePopulation(int count) {
+            int removed = 0;
+            while (count > removed) {
                 if (RemovePopulation()) {
-                    --count;
+                    ++removed;
                 } else {
-                    return;
+                    break;
                 }
             }
+            return removed;
         }
 
         public bool RemovePopulation() {
@@ -56,17 +72,21 @@ namespace EmpireSimulator.Models.Workers
             return false;
         }
 
-        public int UnavailableWorkersCount { get; set; } = 0;
-
-        public int AvailableWorkersCount { get; set; } = 10;
-
-        public int AllWorkersCount { get {
-                int sum = AvailableWorkersCount + UnavailableWorkersCount;
-                foreach(var worker in Workers) {
-                    sum += worker.Value.Count;
-                }
-                return sum;
+        public void MakeAvailable(int count) {
+            if (UnavailableWorkersCount - count < 0) {
+                count = UnavailableWorkersCount;
             }
+            UnavailableWorkersCount -= count;
+            AvailableWorkersCount += count;
+        }
+
+        public void MakeUnavailable(int count) {
+            int removed = RemovePopulation(count);
+            UnavailableWorkersCount += removed;
+        }
+
+        public void NewPopulation(int count) {
+            AvailableWorkersCount += count;
         }
 
         public AbstractWorkers this[ResourseType resourse] => Workers[resourse];

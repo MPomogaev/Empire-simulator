@@ -20,9 +20,7 @@ namespace EmpireSimulator.Models.GameEvents {
             return id;
         }
 
-        public void RemoveEvent(int id) {
-            events.Remove(id);
-        }
+        public void RemoveEvent(int id) => events.Remove(id);
 
         public void Happen() {
             happendEvents.Clear();

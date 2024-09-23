@@ -88,6 +88,7 @@ namespace EmpireSimulator.Models
         private void MakeTurn() {
             context.turnCounter.NextTurn();
             context.eventContext.Happen();
+            context.effectContext.Apply();
         }
 
         private void UpdateGui() {
@@ -103,6 +104,14 @@ namespace EmpireSimulator.Models
             }
             foreach (var _event in events) {
                 Page.AddEventMessage(_event);
+            }
+            var effects = context.effectContext.effects.Values;
+            foreach (var effect in effects) {
+                Page.SetEffect(effect);
+            }
+            var expired = context.effectContext.expieredEffects;
+            foreach (var effect in expired) {
+                Page.RemoveEffect(effect);
             }
         }
 

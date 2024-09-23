@@ -17,9 +17,7 @@ namespace EmpireSimulator.Models.GameEvents {
                 _id = _gameplayContext.eventContext.AddEvent(this);
             }
         }
-        protected virtual void RemoveFromEventList() {
-            _gameplayContext.eventContext.RemoveEvent(_id);
-        }
+
         protected virtual bool IsHappend() => true;
     }
 }

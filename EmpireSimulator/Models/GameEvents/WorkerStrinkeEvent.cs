@@ -1,39 +1,26 @@
 ﻿
 using EmpireSimulator.Data;
+using EmpireSimulator.Models.GameEffects;
 using EmpireSimulator.Models.Resourses;
 
 namespace EmpireSimulator.Models.GameEvents {
     public class WorkerStrinkeEvent: AbstractEvent {
         private MoneyResourse moneyResourse;
         private bool isHappening = false;
-        private int duration = 3;
+        private int duration = 10;
         private int unavailableCount = 0;
+        private int lastStrikeTurn;
 
         public override void Happen() {
-            var workers = _gameplayContext.newWorkerContext;
-            if (isHappening) {
-                duration--;
-                if (duration <= 0) {
-                    RemoveFromEventList();
-                    isHappening = false;
-                    lock (workers) {
-                        workers.AvailableWorkersCount += unavailableCount;
-                        workers.UnavailableWorkersCount -= unavailableCount;
-                    }
-                }
-                return;
-            }
             double consumption = moneyResourse.GetConsuption(_gameplayContext.curentWorkerContext);
             double outflow = -moneyResourse.Inflow.Value;
             int allPopulation = _gameplayContext.curentWorkerContext.AllWorkersCount;
             int maxUnavailable = (int)Math.Round((outflow / consumption) * allPopulation);
             unavailableCount = RandomGenerator.RandomInt(1, maxUnavailable + 1);
-            lock (workers) {
-                workers.RemovePopulation(unavailableCount);
-                workers.UnavailableWorkersCount += unavailableCount;
-            }
-            isHappening = true;
-            duration = 3;
+            var effect = new StrikeEffect(_gameplayContext, unavailableCount, duration);
+            effect.Start();
+            lastStrikeTurn = _gameplayContext.turnCounter.Count;
+            _gameplayContext.eventContext.RemoveEvent(_id);
         }
 
         public override void SetEventListener(GameplayContext gameplayContext) {
@@ -55,7 +42,8 @@ namespace EmpireSimulator.Models.GameEvents {
         }
 
         protected override bool IsHappend() {
-            if (moneyResourse.Inflow >= 0 || isHappening) {
+            int turn = _gameplayContext.turnCounter.Count;
+            if (turn - lastStrikeTurn < duration || moneyResourse.Inflow >= 0) {
                 return false;
             }
             if (!RandomGenerator.IsHappened(0.5)) {

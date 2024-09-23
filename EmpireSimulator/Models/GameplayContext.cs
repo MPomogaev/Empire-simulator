@@ -1,4 +1,5 @@
-﻿using EmpireSimulator.Models.GameEvents;
+﻿using EmpireSimulator.Models.GameEffects;
+using EmpireSimulator.Models.GameEvents;
 using EmpireSimulator.Models.Resourses;
 using EmpireSimulator.Models.Workers;
 
@@ -8,6 +9,7 @@ namespace EmpireSimulator.Models {
         public WorkerContext curentWorkerContext = new();
         public ResoursesContext resoursesContext = new();
         public EventContext eventContext = new();
+        public EffectContext effectContext = new();
         public TurnCounter turnCounter = new();
         public bool continuePlaying = true;
         private GameplayManager _manager;
