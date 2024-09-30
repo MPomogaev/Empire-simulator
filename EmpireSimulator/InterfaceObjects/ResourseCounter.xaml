@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="EmpireSimulator.InterfaceObjects.ResourseCounter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EmpireSimulator.InterfaceObjects"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="100">
+    <UserControl.Resources>
+        <Style TargetType="Label" x:Key="labelStyle">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <UniformGrid Columns="3">
+        <Label x:Name="InflowCounterLabel" Style="{StaticResource labelStyle}"/>
+        <Label x:Name="StorageCapacityLabel" Style="{StaticResource labelStyle}"/>
+        <Label x:Name="MaxStorageCapacityLabel" Style="{StaticResource labelStyle}"/>
+    </UniformGrid>
+</UserControl>

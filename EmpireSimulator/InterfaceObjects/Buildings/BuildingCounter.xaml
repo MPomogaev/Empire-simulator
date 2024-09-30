@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="EmpireSimulator.InterfaceObjects.Buildings.BuildingCounter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EmpireSimulator.InterfaceObjects.Buildings"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="100">
+    <UserControl.Resources>
+        <Style x:Key="CounterStyle" TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="18px"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="MinusSign" MouseDown="MinusClick" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Column="1" Grid.Row="1" Fill="Black"/>
+        </Grid>
+        <Label x:Name="CounterLabel" Grid.Column="1" Style="{StaticResource CounterStyle}">0</Label>
+        <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="2" Margin="5"/>
+        <Grid Grid.Column="2" x:Name="PlusSign" MouseDown="PlusClick" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.2*"/>
+                <RowDefinition/>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition/>
+                <RowDefinition Height="1.2*"/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" Fill="Black"/>
+            <Rectangle Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" Fill="Black"/>
+        </Grid>
+    </Grid>
+</UserControl>
