@@ -1,6 +1,7 @@
 ﻿using EmpireSimulator.Data;
-using EmpireSimulator.Models.GameEvents;
+using EmpireSimulator.Models.Buildings;
 using EmpireSimulator.Models.Resourses;
+using Microsoft.Extensions.Logging;
 
 namespace EmpireSimulator.Models
 {
@@ -8,8 +9,10 @@ namespace EmpireSimulator.Models
     {
         GameplayPage Page;
         GameplayContext context;
+        ILogger logger;
 
         public GameplayManager(GameplayPage _Page) {
+            logger = LogManager.GetLogger<GameplayManager>();
             Page = _Page;
             context = new(this);
             context.eventContext.SetPossibleEvents(context);
@@ -81,12 +84,26 @@ namespace EmpireSimulator.Models
             }
         }
 
+        public void DestroyBuilding(ResourseType resourseType, BuildingType buildingType) {
+            logger.LogInformation(resourseType + " " + buildingType);
+            context.buildingContext[resourseType, buildingType].Destroy();
+        }
+
+        public void BuildBuilding(ResourseType resourseType, BuildingType buildingType) {
+            logger.LogInformation(resourseType + " " + buildingType);
+            var building = context.buildingContext[resourseType, buildingType];
+            if (building.Build()) {
+                Page.SetBuildingsCounter(resourseType, buildingType, building.Count);
+            }
+        }
+
         public void StopGame() {
             context.continuePlaying = false;
         }
 
         private void MakeTurn() {
             context.turnCounter.NextTurn();
+            logger.LogInformation("next turn");
             context.eventContext.Happen();
             context.effectContext.Apply();
         }
@@ -105,12 +122,13 @@ namespace EmpireSimulator.Models
             foreach (var _event in events) {
                 Page.AddEventMessage(_event);
             }
-            var effects = context.effectContext.effects.Values;
+            var effects = context.effectContext.seenEffects.Values;
             foreach (var effect in effects) {
                 Page.SetEffect(effect);
             }
             var expired = context.effectContext.expieredEffects;
-            foreach (var effect in expired) {
+            while (expired.Count > 0) {
+                var effect = expired.Pop();
                 Page.RemoveEffect(effect);
             }
         }

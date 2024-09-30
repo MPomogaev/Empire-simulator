@@ -1,12 +1,12 @@
 ﻿
 namespace EmpireSimulator.Models.Resourses {
     public class InflowMultiplier {
-        Func<int> _multiplier;
-        public InflowMultiplier(Func<int> multiplier) {
+        Func<double> _multiplier;
+        public InflowMultiplier(Func<double> multiplier) {
             _multiplier = multiplier;
         }
 
-        public int Multipy(int inflow) {
+        public double Multipy(int inflow) {
             return inflow * _multiplier();
         }
     }

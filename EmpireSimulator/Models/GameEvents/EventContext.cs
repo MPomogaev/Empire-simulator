@@ -1,50 +1,55 @@
 ﻿
+using EmpireSimulator.Data;
+using Microsoft.Extensions.Logging;
+
 namespace EmpireSimulator.Models.GameEvents {
     public class EventContext {
         private List<AbstractEvent> possibleEvents = new() {
             new StarvationDeathEvent(),
-            new GameEndedEvent(),
             new PopulationGrowthEvent(),
             new WorkerStrinkeEvent(),
+            new GoodWhetherEvent(),
+            new InvestmentEvent(),
+            new DiseaseDisableEvent(1, 5),
+            new DiseaseEvent(),
+            new ScienceBreakthroughEvent(),
+            new DroughtEvent(),
+            new MoneyWasteEvent(),
         };
+        private ILogger logger;
         private List<AbstractEvent> happendEvents = new();
-        private Dictionary<int, AbstractEvent> events = new();
-        private List<int> unusedIds = new List<int>();
+        private IndexedDictionary<AbstractEvent> events = new();
         private int maxId = 0;
 
         public List<AbstractEvent> HappendEvents { get => happendEvents; }
 
-        public int AddEvent(AbstractEvent newEvent) {
-            int id = ChooseId();
-            events[id] = newEvent;
-            return id;
+        public EventContext() {
+            logger = LogManager.GetLogger<EventContext>();
         }
 
-        public void RemoveEvent(int id) => events.Remove(id);
+        public void AddEvent(AbstractEvent newEvent) {
+            int id = events.Add(newEvent);
+            newEvent.Id = id;
+            //logger.LogInformation("adding event " + id);
+        }
+
+        public void RemoveEvent(int id) {
+            //logger.LogInformation("remove event " + id);
+            events.Remove(id);
+        }
 
         public void Happen() {
             happendEvents.Clear();
-            foreach(var _event in events.ToList()) {
-                _event.Value.Happen();
-                happendEvents.Add(_event.Value);
+            foreach(var _event in events.Values) {
+                _event.Happen();
+                happendEvents.Add(_event);
             }
         }
 
         public void SetPossibleEvents(GameplayContext gameplayContext) {
             foreach (var _event in possibleEvents) {
-                _event.SetEventListener(gameplayContext);
+                _event.SetEvent(gameplayContext);
             }
-        }
-
-        private int ChooseId() {
-            int id;
-            if (unusedIds.Count > 0) {
-                 id = unusedIds.First();
-                unusedIds.RemoveAt(0);
-            } else {
-                id = maxId++;
-            }
-            return id;
         }
     }
 }

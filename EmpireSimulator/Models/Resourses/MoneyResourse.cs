@@ -2,26 +2,23 @@
 
 namespace EmpireSimulator.Models.Resourses
 {
-    public class MoneyResourse: AbstractResourse {
+    public class MoneyResourse: HasStorageResourse {
         private static readonly int BaseWorkerOutput = 5;
         private static readonly int BaseWorkerConsuption = 1;
 
         public MoneyResourse() {
-            _MaxStorageCapacity = 1000;
-            _StorageCapacity = 100;
+            SetMaxStorageCapacity(1000);
+            SetStorageCapacity(100);
         }
 
-        protected override int CalculateBaseInflow(WorkerContext workerContext) {
-            return GetProduction(workerContext) - GetConsuption(workerContext);
+        public override int CalculateBaseInflow(WorkerContext workerContext) {
+            return BaseWorkerOutput * workerContext[ResourseType.Money].Count;
         }
 
         public override void NextTurnUpdate(WorkerContext workerContext) {
-            _StorageCapacity += _Inflow;
-            if (_StorageCapacity > MaxStorageCapacity) {
-                _StorageCapacity = MaxStorageCapacity.Value;
-            }
+            AddToStorage(_Inflow);
             _Inflow = CalculateInflow(workerContext);
-            if(_StorageCapacity < 0) {
+            if(StorageCapacity < 0) {
                 OnNoMoneyLeft();
             }
         }
@@ -31,12 +28,8 @@ namespace EmpireSimulator.Models.Resourses
             NoMoneyLeft?.Invoke(this, EventArgs.Empty);
         }
 
-        public int GetConsuption(WorkerContext workerContext) {
+        public override int GetConsumption(WorkerContext workerContext) {
             return BaseWorkerConsuption * workerContext.AllWorkersCount - workerContext.UnavailableWorkersCount;
-        }
-
-        public int GetProduction(WorkerContext workerContext) {
-            return BaseWorkerOutput * workerContext[ResourseType.Money].Count;
         }
     }
 }

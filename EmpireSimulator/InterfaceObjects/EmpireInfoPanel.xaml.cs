@@ -20,7 +20,7 @@ namespace EmpireSimulator.InterfaceObjects {
 
         public void SetEffect(AbstractEffect effect) {
             if (effectIdsMessagesIds.ContainsKey(effect.Id)) {
-                effectsMessages[effect.Id].DurationCount = effect.Duration.Value;
+                effectsMessages[effect.Id].DurationCount = effect.Duration;
             } else {
                 AddEffect(effect);
             }
@@ -29,7 +29,7 @@ namespace EmpireSimulator.InterfaceObjects {
         public void AddEffect(AbstractEffect effect) {
             var msg = new EffectMessage();
             msg.EffectName = effect.Name;
-            msg.DurationCount = effect.Duration.Value;
+            msg.DurationCount = effect.Duration;
             msg.TypeColor = Constants.EffectBrushes[effect.Type];
             int msgId = EffectMessagesStack.Children.Add(msg);
             effectIdsMessagesIds[effect.Id] = msgId;
@@ -37,8 +37,16 @@ namespace EmpireSimulator.InterfaceObjects {
         }
 
         public void RemoveEffect(AbstractEffect effect) {
-            int msgId = effectIdsMessagesIds[effect.Id];
+            int effectId = effect.Id;
+            int msgId = effectIdsMessagesIds[effectId];
             EffectMessagesStack.Children.RemoveAt(msgId);
+            effectIdsMessagesIds.Remove(effectId);
+            foreach(var key in effectIdsMessagesIds.Keys) {
+                if (effectIdsMessagesIds[key] > msgId) {
+                    effectIdsMessagesIds[key]--;
+                }
+            }
+            effectsMessages.Remove(effectId);
         }
     }
 }

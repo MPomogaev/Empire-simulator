@@ -7,6 +7,9 @@ using EmpireSimulator.Models.Resourses;
 using EmpireSimulator.Models.Workers;
 using EmpireSimulator.Models.GameEvents;
 using EmpireSimulator.InterfaceObjects;
+using Microsoft.Extensions.Logging;
+using EmpireSimulator.Models.Buildings;
+using EmpireSimulator.InterfaceObjects.Buildings;
 
 namespace EmpireSimulator
 {
@@ -42,6 +45,18 @@ namespace EmpireSimulator
                 gameplayManager.StartGameAsync();
             });
             gameplayThread.Start();
+            foreach(var resourseType in Constants.ResourseTypes) {
+                var buildingBlock = BuildingsPanel[resourseType];
+                foreach(var buildingType in Constants.BuildingTypes) {
+                    var building = buildingBlock[buildingType];
+                    building.OnMinusClick = new(() => {
+                        gameplayManager.DestroyBuilding(resourseType, buildingType);
+                    });
+                    building.OnPlusClick = new(() => {
+                        gameplayManager.BuildBuilding(resourseType, buildingType);
+                    });
+                }
+            }
         }
 
         public void SetProgressBarButtons(ResourseType resourse) {
@@ -77,6 +92,11 @@ namespace EmpireSimulator
             entry.Content = msg;
             entry.Margin = new Thickness(5);
             MessagesStack.Children.Add(entry);
+        }
+
+        public void SetBuildingsCounter(ResourseType resourse, BuildingType building, int value) {
+            var counter = BuildingsPanel[resourse][building];
+            counter.Counter = value;
         }
 
         public void SetTimeCounter(int count) {

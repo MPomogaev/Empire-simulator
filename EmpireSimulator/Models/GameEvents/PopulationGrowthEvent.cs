@@ -2,9 +2,13 @@
 using EmpireSimulator.Data;
 
 namespace EmpireSimulator.Models.GameEvents {
-    public class PopulationGrowthEvent: AbstractEvent {
+    public class PopulationGrowthEvent: EachTurnChanceEvent {
 
-        private FoodResourse foodResourse;
+        public PopulationGrowthEvent() {
+            _description = "eстевтсвенный прирост населения ";
+            _name = "Новое население";
+            _type = EventType.Positive;
+        }
 
         public override void Happen() {
             lock(_gameplayContext.newWorkerContext) {
@@ -13,27 +17,18 @@ namespace EmpireSimulator.Models.GameEvents {
             _gameplayContext.eventContext.RemoveEvent(Id);
         }
 
-        public override void SetEventListener(GameplayContext gameplayContext) {
-            _gameplayContext = gameplayContext;
-            foodResourse = (FoodResourse)_gameplayContext.resoursesContext[ResourseType.Food];
-            _gameplayContext.turnCounter.NextTurnEvent += AddToEventListAction;
-        }
-
-        string _description = "eстевтсвенный прирост населения ";
-        public override string? Name => "Новое население";
-        public override string? Description => _description;
-        public override EventType Type => EventType.Positive;
-
-        protected override bool IsHappend() {
-            var workerContext = _gameplayContext.curentWorkerContext;
-            double consumption = foodResourse.GetConsuption(workerContext);
-            double production = foodResourse.GetProduction(workerContext);
-            if (production == 0) {
-                return false;
+        public override double Chance { get { 
+                var foodResourse = (FoodResourse)_gameplayContext.resoursesContext[ResourseType.Food];
+                var workerContext = _gameplayContext.curentWorkerContext;
+                double production = foodResourse.CalculateBaseInflow(workerContext);
+                if (production == 0) {
+                    return 0;
+                }
+                double consumption = foodResourse.GetConsumption(workerContext);
+                double linierChance = production / (production + consumption);
+                double curvedChance = ChanceCurves.CurveLinierChance(linierChance, ChanceScale.Smaller);
+                return curvedChance;
             }
-            double linierChance = production / (production + consumption);
-            double curvedChance = Data.ChanceCurves.CurveLinierChance(linierChance, ChanceScale.Small);
-            return RandomGenerator.IsHappened(curvedChance);
         }
 
     }

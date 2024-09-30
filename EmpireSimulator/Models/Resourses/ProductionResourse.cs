@@ -2,19 +2,23 @@
 
 namespace EmpireSimulator.Models.Resourses
 {
-    public class ProductionResourse: AbstractResourse {
+    public class ProductionResourse: HasStorageResourse {
         private static readonly int BaseWorkerOutput = 1;
 
-        protected override int CalculateBaseInflow(WorkerContext workerContext) {
+        public override int CalculateBaseInflow(WorkerContext workerContext) {
             return BaseWorkerOutput * workerContext[ResourseType.Production].Count;
         }
 
         public override void NextTurnUpdate(WorkerContext workerContext) {
-            _StorageCapacity += _Inflow;
-            if (_StorageCapacity > MaxStorageCapacity) {
-                _StorageCapacity = MaxStorageCapacity.Value;
-            }
+            AddToStorage(Inflow);
             _Inflow = CalculateInflow(workerContext);
+        }
+
+        public override void RemoveFromStorage(int value) {
+            if (value > StorageCapacity) {
+                throw new ArgumentException("tried to remove from storage more production than it has");
+            }
+            base.RemoveFromStorage(value);
         }
 
     }

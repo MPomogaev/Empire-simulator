@@ -12,19 +12,18 @@ namespace EmpireSimulator.Models.GameEvents {
         private int lastStrikeTurn;
 
         public override void Happen() {
-            double consumption = moneyResourse.GetConsuption(_gameplayContext.curentWorkerContext);
-            double outflow = -moneyResourse.Inflow.Value;
+            double consumption = moneyResourse.GetConsumption(_gameplayContext.curentWorkerContext);
+            double outflow = -moneyResourse.Inflow;
             int allPopulation = _gameplayContext.curentWorkerContext.AllWorkersCount;
             int maxUnavailable = (int)Math.Round((outflow / consumption) * allPopulation);
             unavailableCount = RandomGenerator.RandomInt(1, maxUnavailable + 1);
             var effect = new StrikeEffect(_gameplayContext, unavailableCount, duration);
             effect.Start();
             lastStrikeTurn = _gameplayContext.turnCounter.Count;
-            _gameplayContext.eventContext.RemoveEvent(_id);
+            _gameplayContext.eventContext.RemoveEvent(Id);
         }
 
-        public override void SetEventListener(GameplayContext gameplayContext) {
-            _gameplayContext = gameplayContext;
+        protected override void SetEventListener() {
             moneyResourse = (MoneyResourse)_gameplayContext.resoursesContext[Resourses.ResourseType.Money];
             moneyResourse.NoMoneyLeft += AddToEventListAction;
         }
@@ -41,7 +40,7 @@ namespace EmpireSimulator.Models.GameEvents {
                 + duration + " ходов";
         }
 
-        protected override bool IsHappend() {
+        protected override bool IsHappened() {
             int turn = _gameplayContext.turnCounter.Count;
             if (turn - lastStrikeTurn < duration || moneyResourse.Inflow >= 0) {
                 return false;

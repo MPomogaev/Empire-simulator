@@ -12,7 +12,7 @@ namespace EmpireSimulator.InterfaceObjects {
         }
 
         public string EffectName { set => EffectNameLabel.Content = value; }
-        public int DurationCount {  set => DurationCountLabel.Content = value;}
+        public int? DurationCount {  set => DurationCountLabel.Content = value;}
         public Brush TypeColor { set => EffectNameLabel.Foreground = value; }
     }
 }

@@ -1,42 +1,36 @@
-﻿
+﻿using EmpireSimulator.Data;
+
 namespace EmpireSimulator.Models.GameEffects {
     public class EffectContext {
-        public Dictionary<int, AbstractEffect> effects = new();
-        public List<AbstractEffect> expieredEffects = new();
-        private List<int> unusedIds = new List<int>();
+        public IndexedDictionary<AbstractEffect> seenEffects = new();
+        public IndexedDictionary<AbstractEffect> unseenEffects = new();
+        public Stack<AbstractEffect> expieredEffects = new();
         private int maxId = 0;
 
         public void Apply() {
-            expieredEffects.Clear();
-            foreach (var effect in effects.Values) {
+            foreach (var effect in seenEffects.Values) {
                 effect.NextTurn();
-                if (effect.Duration <= 0) {
-                    effect.End();
-                    RemoveFromEffects(effect);
-                }
+            }
+            foreach (var effect in unseenEffects.Values) {
+                effect.NextTurn();
             }
         }
 
         public int AddToEffects(AbstractEffect effect) {
-            int id = ChooseId();
-            effects[id] = effect;
-            return id;
+            if (effect.IsShowed) {
+                return seenEffects.Add(effect);
+            }
+            return unseenEffects.Add(effect);
+            
         }
 
         public void RemoveFromEffects(AbstractEffect effect) {
-            effects.Remove(effect.Id);
-            expieredEffects.Add(effect);
-        }
-
-        private int ChooseId() {
-            int id;
-            if (unusedIds.Count > 0) {
-                id = unusedIds.First();
-                unusedIds.RemoveAt(0);
+            if (effect.IsShowed) {
+                seenEffects.Remove(effect.Id);
+                expieredEffects.Push(effect);
             } else {
-                id = maxId++;
+                unseenEffects.Remove(effect.Id);
             }
-            return id;
         }
     }
 }

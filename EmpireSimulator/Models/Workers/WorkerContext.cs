@@ -1,11 +1,16 @@
 ﻿using EmpireSimulator.Data;
-using EmpireSimulator.Models.GameEvents;
+using EmpireSimulator.Models.GameEffects;
 using EmpireSimulator.Models.Resourses;
 
 namespace EmpireSimulator.Models.Workers
 {
     public class WorkerContext
     {
+        private GameplayContext _gameplayContext;
+        public WorkerContext(GameplayContext gameplayContext) {
+            _gameplayContext = gameplayContext;
+        }
+
         private Dictionary<ResourseType, AbstractWorkers> Workers = new() {
             { ResourseType.Food, new FoodWorkers() },
             { ResourseType.Production, new ProductionWorkers() },
@@ -24,6 +29,10 @@ namespace EmpireSimulator.Models.Workers
                 int sum = AvailableWorkersCount + UnavailableWorkersCount;
                 foreach (var worker in Workers) {
                     sum += worker.Value.Count;
+                }
+                if (sum == 0) {
+                    var gameEnd = new GameEndEffect(_gameplayContext);
+                    gameEnd.Start();
                 }
                 return sum;
             }
@@ -80,9 +89,10 @@ namespace EmpireSimulator.Models.Workers
             AvailableWorkersCount += count;
         }
 
-        public void MakeUnavailable(int count) {
+        public int MakeUnavailable(int count) {
             int removed = RemovePopulation(count);
             UnavailableWorkersCount += removed;
+            return removed;
         }
 
         public void NewPopulation(int count) {

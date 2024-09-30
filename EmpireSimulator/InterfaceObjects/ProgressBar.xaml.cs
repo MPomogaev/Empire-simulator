@@ -36,7 +36,7 @@ namespace EmpireSimulator.InterfaceObjects {
 
         public void SetBar() {
             if (NewValue > MaxValue) {
-                throw new ArgumentException("progress bar Value more then MaxValue");
+                NewValue = MaxValue;
             }
             SetColumns(ProgressBarColumn, EmptyProgressBarColumn);
             SetSlider();
@@ -44,7 +44,7 @@ namespace EmpireSimulator.InterfaceObjects {
 
         public void SetSlider() {
             if (NewValue > MaxValue) {
-                throw new ArgumentException("slider Value more then MaxValue");
+                NewValue = MaxValue;
             }
             ValueLabel.Content = NewValue;
             MaxValueLabel.Content = MaxValue;
