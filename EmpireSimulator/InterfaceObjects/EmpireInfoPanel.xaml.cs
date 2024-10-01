@@ -8,7 +8,7 @@ namespace EmpireSimulator.InterfaceObjects {
     /// Логика взаимодействия для EmpireInfoPanel.xaml
     /// </summary>
     public partial class EmpireInfoPanel: UserControl {
-        private Dictionary<int, int> effectIdsMessagesIds = new();
+        private StackPositionsDictionary effectIdsMessagesIds = new();
         private Dictionary<int, EffectMessage> effectsMessages = new();
         public EmpireInfoPanel() {
             InitializeComponent();
@@ -19,7 +19,7 @@ namespace EmpireSimulator.InterfaceObjects {
         public int UnavailablePopulationCount { set => UnavailableCounter.Counter = value; }
 
         public void SetEffect(AbstractEffect effect) {
-            if (effectIdsMessagesIds.ContainsKey(effect.Id)) {
+            if (effectsMessages.ContainsKey(effect.Id)) {
                 effectsMessages[effect.Id].DurationCount = effect.Duration;
             } else {
                 AddEffect(effect);
@@ -38,14 +38,8 @@ namespace EmpireSimulator.InterfaceObjects {
 
         public void RemoveEffect(AbstractEffect effect) {
             int effectId = effect.Id;
-            int msgId = effectIdsMessagesIds[effectId];
+            int msgId = effectIdsMessagesIds.Remove(effectId);
             EffectMessagesStack.Children.RemoveAt(msgId);
-            effectIdsMessagesIds.Remove(effectId);
-            foreach(var key in effectIdsMessagesIds.Keys) {
-                if (effectIdsMessagesIds[key] > msgId) {
-                    effectIdsMessagesIds[key]--;
-                }
-            }
             effectsMessages.Remove(effectId);
         }
     }

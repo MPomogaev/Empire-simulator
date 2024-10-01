@@ -9,7 +9,6 @@ using EmpireSimulator.Models.GameEvents;
 using EmpireSimulator.InterfaceObjects;
 using Microsoft.Extensions.Logging;
 using EmpireSimulator.Models.Buildings;
-using EmpireSimulator.InterfaceObjects.Buildings;
 
 namespace EmpireSimulator
 {
@@ -21,7 +20,7 @@ namespace EmpireSimulator
         readonly Thread gameplayThread;
         readonly GameplayManager gameplayManager;
         readonly Dictionary<ResourseType, InterfaceObjects.ProgressBar> resoursesBars;
-        readonly Dictionary<ResourseType, InterfaceObjects.ResourseCounter> resoursesCounters;
+        readonly Dictionary<ResourseType, ResourseCounter> resoursesCounters;
 
         public GameplayPage() {
             InitializeComponent();
@@ -127,6 +126,7 @@ namespace EmpireSimulator
 
         public void LeaveGame(object sender, RoutedEventArgs e) {
             gameplayManager.StopGame();
+            gameplayThread.Join();
             MenuPage menuPage = new();
             this.NavigationService.Navigate(menuPage);
         }

@@ -6,12 +6,7 @@ namespace EmpireSimulator.Data {
         private int maxIndex = 0;
 
         public int Add(ValueType value) {
-            int index;
-            if (unusedKeys.Count == 0) {
-                index = maxIndex++;
-            } else {
-                index = unusedKeys.Pop();
-            }
+            int index = unusedKeys.Count == 0 ? maxIndex++ : unusedKeys.Pop();
             values[index] = value;
             return index;
         }
