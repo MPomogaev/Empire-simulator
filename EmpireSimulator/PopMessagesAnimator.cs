@@ -15,10 +15,14 @@ namespace EmpireSimulator {
             new("Смерть", Data.BrushConverter.GetBrushFromColorString("Red")),
             new("Засуха", Data.BrushConverter.GetBrushFromColorString("Red")),
             new("Неожиданные траты", Data.BrushConverter.GetBrushFromColorString("Red")),
+            new("Война", Data.BrushConverter.GetBrushFromColorString("Red")),
             new("Хорошая погода", Data.BrushConverter.GetBrushFromColorString("Green")),
             new("Новое население", Data.BrushConverter.GetBrushFromColorString("Green")),
             new("Научный прорыв", Data.BrushConverter.GetBrushFromColorString("Green")),
             new("Инвестиции", Data.BrushConverter.GetBrushFromColorString("Green")),
+            new("Праздник", Data.BrushConverter.GetBrushFromColorString("Green")),
+            new("Перемирие", Data.BrushConverter.GetBrushFromColorString("Green")),
+            new("Мигранты", Data.BrushConverter.GetBrushFromColorString("Black")),
         };
         private MenuPage _menuPage;
 

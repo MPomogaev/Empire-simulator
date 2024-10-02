@@ -27,8 +27,8 @@
         <Rectangle Grid.RowSpan="3" Fill="Maroon" />
         <Rectangle Grid.RowSpan="3" Grid.ColumnSpan="2" Fill="Maroon" RadiusX="30" RadiusY="30" />
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2">
-            <Label FontSize="30px" HorizontalAlignment="Center">Menu</Label>
-            <Button FontSize="20px" Click="GoToGameplay">Новая игра</Button>
+            <Label FontSize="30px" HorizontalAlignment="Center" FontWeight="Bold" Foreground="White">Menu</Label>
+            <Button FontSize="20px" Click="GoToGameplay" >Новая игра</Button>
             <Button FontSize="20px" Click="Exit">Выйти</Button>
         </StackPanel>
         <Canvas Name="MessagesCanvas" Grid.Column="2" Grid.RowSpan="3">

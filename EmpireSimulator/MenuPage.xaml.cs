@@ -38,7 +38,7 @@ namespace EmpireSimulator
             int stackPosition = MessagesCanvas.Children.Add(message);
             int stackPositionId = stackPositions.Add(stackPosition);
             message.Style = (Style)FindResource("MessagesLabelStyle");
-            message.FontSize = RandomGenerator.RandomInt(16, 36);
+            message.FontSize = RandomGenerator.RandomInt(16, 42);
             double maxWidth = MessagesCanvas.ActualWidth;
             double x = RandomGenerator.RandomDouble(maxWidth * 0.9);
             Canvas.SetLeft(message, x);
