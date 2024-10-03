@@ -102,6 +102,10 @@ namespace EmpireSimulator
             TimeCounter.Counter = count;
         }
 
+        public void SetScoreCounter(int count) {
+            ScoreCounter.Counter = count;
+        }
+
         public void AddNewTurn(int turn) {
             AddMessage("Ход " + turn);
         }

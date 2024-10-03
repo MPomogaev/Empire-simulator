@@ -108,7 +108,8 @@ namespace EmpireSimulator.Models
 
         private void MakeTurn() {
             context.turnCounter.NextTurn();
-            logger.LogInformation("next turn");
+            context.scoreCounter.NextTurn();
+            //logger.LogInformation("next turn");
             context.eventContext.Happen();
             context.effectContext.Apply();
         }
@@ -116,6 +117,8 @@ namespace EmpireSimulator.Models
         private void UpdateGui() {
             int turn = context.turnCounter.Count;
             Page.SetTimeCounter(turn);
+            int score = context.scoreCounter.Count;
+            Page.SetScoreCounter(score);
             Page.SetProgressBars(context.newWorkerContext);
             context.resoursesContext.UpdateResourses(context.newWorkerContext);
             Page.SetResourses(context.resoursesContext);
