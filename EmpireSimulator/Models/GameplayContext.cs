@@ -18,6 +18,7 @@ namespace EmpireSimulator.Models {
         public bool exited = false;
         private GameplayManager _manager;
         public GameplayManager Manager { get { return _manager; } }
+        public string EmpireName { get; set; }
 
         public GameplayContext(GameplayManager manager) {
             _manager = manager;

@@ -22,5 +22,9 @@ namespace EmpireSimulator.Models {
             Count += turnCount;
         }
 
+        public void Save() {
+            FileManager.SaveScore(Count, _gameplayContext.EmpireName);
+        }
+
     }
 }

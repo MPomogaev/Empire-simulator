@@ -11,20 +11,26 @@
             <Setter Property="BorderThickness" Value="3px" />
             <Setter Property="BorderBrush" Value="Black" />
         </Style>
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Label Content="Населения" FontWeight="Bold" FontSize="16"/>
-        <UniformGrid Grid.Row="1" Columns="2">
+        <Label x:Name="EmpireNameLabel" Grid.Row="0" Style="{StaticResource LabelStyle}"/>
+        <Label Grid.Row="1" Content="Населения" Style="{StaticResource LabelStyle}"/>
+        <UniformGrid Grid.Row="2" Columns="2">
             <local:NamedCounter x:Name="AllCounter" CounterName="Всего"></local:NamedCounter>
             <local:NamedCounter x:Name="UnavailableCounter" CounterName="Недоступно"></local:NamedCounter>
         </UniformGrid>
-        <StackPanel Grid.Row="3" x:Name="EffectMessagesStack" Margin="20px" Orientation="Vertical" VerticalAlignment="Top"/>
-        <Border Style="{StaticResource panelBorder}" Grid.RowSpan="4"/>
+        <StackPanel Grid.Row="4" x:Name="EffectMessagesStack" Margin="20px" Orientation="Vertical" VerticalAlignment="Top"/>
+        <Border Style="{StaticResource panelBorder}" Grid.RowSpan="5"/>
     </Grid>
 </UserControl>

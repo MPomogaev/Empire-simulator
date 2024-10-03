@@ -105,5 +105,16 @@
             <interface:ResourseCounter Grid.Column="1" Grid.Row="5" x:Name="MoneyResourseCounter" Color="Gold"/>
             <interface:ResourseCounter Grid.Column="1" Grid.Row="7" x:Name="ScienceResourseCounter" Color="Blue"/>
         </Grid>
+        <Grid x:Name="EmpireNamePanel" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="White" Visibility="Hidden">
+            <Viewbox Stretch="None">
+                <UniformGrid Rows="3">
+                    <Label Margin="5" FontSize="20">Назовите свою империю</Label>
+                    <TextBox x:Name="EmpireNameTextBox" FontSize="20" Background="#eee" VerticalAlignment="Center" BorderThickness="2" BorderBrush="Black"/>
+                    <Viewbox Margin="5">
+                        <Button x:Name="SaveEmpireNameButton" Content="сохранить" Click="SaveEmpireName"/>
+                    </Viewbox>
+                </UniformGrid>
+            </Viewbox>
+        </Grid>
     </Grid>
 </Page>

@@ -104,6 +104,7 @@ namespace EmpireSimulator.Models
                 context.continuePlaying = false;
                 context.exited = true;
             }
+            context.scoreCounter.Save();
         }
 
         private void MakeTurn() {
@@ -139,6 +140,10 @@ namespace EmpireSimulator.Models
                 var effect = expired.Pop();
                 Page.RemoveEffect(effect);
             }
+        }
+
+        public void SetEmpireName(string name) {
+            context.EmpireName = name;
         }
 
         private void GetNextTurnData() {

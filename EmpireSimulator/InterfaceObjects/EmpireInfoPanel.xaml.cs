@@ -18,6 +18,8 @@ namespace EmpireSimulator.InterfaceObjects {
 
         public int UnavailablePopulationCount { set => UnavailableCounter.Counter = value; }
 
+        public string EmpireName { set => EmpireNameLabel.Content = value; }
+
         public void SetEffect(AbstractEffect effect) {
             if (effectsMessages.ContainsKey(effect.Id)) {
                 effectsMessages[effect.Id].DurationCount = effect.Duration;
