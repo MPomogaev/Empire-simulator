@@ -39,22 +39,24 @@ namespace EmpireSimulator.Models
         }
 
         public async void StartGameAsync() {
-            try {
-                while (context.continuePlaying) {
+            while (true) {
+                lock ((object)context.continuePlaying) {
+                    if (!context.continuePlaying) {
+                        break;
+                    }
                     Page.Dispatcher.Invoke(() => {
                         UpdateGui();
                         GetNextTurnData();
                     });
-                    var nextTurnDelay = Task.Delay(2000);
-                    MakeTurn();
-                    await nextTurnDelay;
                 }
+                var nextTurnDelay = Task.Delay(2000);
+                MakeTurn();
+                await nextTurnDelay;
+            }
+            if (!context.exited) {
                 Page.Dispatcher.Invoke(() => {
                     Page.AddMessage(Constants.GameEndedMessage);
                 });
-            } catch (TaskCanceledException ex) {
-                //throw ex;
-                //need to emplement logging
             }
         }
 
@@ -98,7 +100,10 @@ namespace EmpireSimulator.Models
         }
 
         public void StopGame() {
-            context.continuePlaying = false;
+            lock ((object)context.continuePlaying) {
+                context.continuePlaying = false;
+                context.exited = true;
+            }
         }
 
         private void MakeTurn() {

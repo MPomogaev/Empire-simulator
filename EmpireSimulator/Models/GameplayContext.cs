@@ -14,6 +14,7 @@ namespace EmpireSimulator.Models {
         public BuildingContext buildingContext;
         public TurnCounter turnCounter = new();
         public bool continuePlaying = true;
+        public bool exited = false;
         private GameplayManager _manager;
         public GameplayManager Manager { get { return _manager; } }
 
