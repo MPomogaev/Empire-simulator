@@ -3,26 +3,35 @@ using System.Xml.Linq;
 
 namespace EmpireSimulator.Data {
     public class FileManager {
-        static private string dataPath = ".\\data";
+        static readonly public string dataPath = ".\\data";
+        static readonly public string scoreFile = "score.txt";
+        static readonly public string scorePath = Path.Combine(dataPath, scoreFile);
 
-        public static void SaveScore(int score, string empireName) {
-            XDocument document = new XDocument(
-                new XElement("score-info",
-                    new XElement("score", score),
-                    new XElement("empire-name", empireName))
-                );
-            LoadXmlDockToFile(dataPath, "score.txt", document);
+        public static XDocument GetScoresFile() {
+            CheckDirectory(dataPath);
+            return LoadXmlFile(scorePath, "scores");
         }
 
-        private static void LoadXmlDockToFile(string directoryName, string fileName, XDocument document) {
-            string path = Path.Combine(directoryName, fileName);
-            CheckDirectory(directoryName);
-            document.Save(path);
+        public static XDocument LoadXmlFile(string path, string root) {
+            XDocument document;
+            CheckFile(path);
+            try {
+                document = XDocument.Load(path);
+            } catch (System.Xml.XmlException ex) {
+                document = new XDocument(new XElement(root));
+            }
+            return document;
         }
 
-        private static void CheckDirectory(string name) {
+        public static void CheckDirectory(string name) {
             if (!Directory.Exists(name)) {
                 Directory.CreateDirectory(name);
+            }
+        }
+
+        public static void CheckFile(string name) {
+            if (!File.Exists(name)) {
+                using (var stream = File.Create(name)) { }
             }
         }
     }

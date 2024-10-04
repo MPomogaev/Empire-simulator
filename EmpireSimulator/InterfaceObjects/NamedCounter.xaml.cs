@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 
 namespace EmpireSimulator.InterfaceObjects {
@@ -12,5 +13,12 @@ namespace EmpireSimulator.InterfaceObjects {
 
         public string CounterName { set => CounterNameLabel.Content = value; }
         public int Counter { set => CounterLabel.Content = value; }
+        public bool IsBold { set {
+                if (!value) {
+                    CounterLabel.FontWeight = FontWeights.Normal;
+                    CounterNameLabel.FontWeight = FontWeights.Normal;
+                }
+            } 
+        }
     }
 }

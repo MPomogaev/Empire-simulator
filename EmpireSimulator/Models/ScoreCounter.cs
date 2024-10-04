@@ -1,9 +1,11 @@
 ﻿using EmpireSimulator.Data;
 using EmpireSimulator.Models.Buildings;
+using System.Xml.Linq;
 
 namespace EmpireSimulator.Models {
     public class ScoreCounter {
         GameplayContext _gameplayContext;
+        static private int scoresCount = 10;
         public int Count {  get; set; }
 
         public ScoreCounter(GameplayContext gameplayContext) {
@@ -23,7 +25,26 @@ namespace EmpireSimulator.Models {
         }
 
         public void Save() {
-            FileManager.SaveScore(Count, _gameplayContext.EmpireName);
+            XDocument document = FileManager.GetScoresFile();
+            var elements = document.Root.Elements();
+            var element = new XElement("score-info",
+                    new XElement("score", Count),
+                    new XElement("empire-name", _gameplayContext.EmpireName));
+            bool isPlaced = false;
+            foreach (var entry in elements) {
+                if (int.Parse(entry.Element("score").Value) <= Count) {
+                    entry.AddBeforeSelf(element);
+                    isPlaced = true;
+                    break;
+                }
+            }
+            if (!isPlaced) {
+                elements.Last().AddAfterSelf(element);
+            }
+            if (elements.Count() > scoresCount) {
+                elements.Last().Remove();
+            }
+            document.Save(FileManager.scorePath);
         }
 
     }
