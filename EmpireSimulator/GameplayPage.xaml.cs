@@ -24,6 +24,7 @@ namespace EmpireSimulator
 
         public GameplayPage() {
             InitializeComponent();
+            EmpireNamePanel.Visibility = Visibility.Visible;
             resoursesBars = new() {
                 { ResourseType.Food, FoodBar },
                 { ResourseType.Production, ProductionBar },
@@ -37,16 +38,27 @@ namespace EmpireSimulator
                 { ResourseType.Money, MoneyResourseCounter },
             };
             gameplayManager = new(this);
-            SetWorkerCount();
-            foreach (var resourse in Constants.ResourseTypes)
-                SetProgressBarButtons(resourse);
             gameplayThread = new Thread(() => {
                 gameplayManager.StartGameAsync();
             });
+        }
+
+        public void SaveEmpireName(object sender, RoutedEventArgs e) {
+            var name = EmpireNameTextBox.Text;
+            gameplayManager.SetEmpireName(name);
+            Start();
+            InfoPanel.EmpireName = name;
+            EmpireNamePanel.Visibility = Visibility.Collapsed;
+        }
+
+        public void Start() {
+            SetWorkerCount();
+            foreach (var resourse in Constants.ResourseTypes)
+                SetProgressBarButtons(resourse);
             gameplayThread.Start();
-            foreach(var resourseType in Constants.ResourseTypes) {
+            foreach (var resourseType in Constants.ResourseTypes) {
                 var buildingBlock = BuildingsPanel[resourseType];
-                foreach(var buildingType in Constants.BuildingTypes) {
+                foreach (var buildingType in Constants.BuildingTypes) {
                     var building = buildingBlock[buildingType];
                     building.OnMinusClick = new(() => {
                         gameplayManager.DestroyBuilding(resourseType, buildingType);
@@ -100,6 +112,10 @@ namespace EmpireSimulator
 
         public void SetTimeCounter(int count) {
             TimeCounter.Counter = count;
+        }
+
+        public void SetScoreCounter(int count) {
+            ScoreCounter.Counter = count;
         }
 
         public void AddNewTurn(int turn) {

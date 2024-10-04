@@ -13,16 +13,19 @@ namespace EmpireSimulator.Models {
         public EffectContext effectContext = new();
         public BuildingContext buildingContext;
         public TurnCounter turnCounter = new();
+        public ScoreCounter scoreCounter;
         public bool continuePlaying = true;
         public bool exited = false;
         private GameplayManager _manager;
         public GameplayManager Manager { get { return _manager; } }
+        public string EmpireName { get; set; }
 
         public GameplayContext(GameplayManager manager) {
             _manager = manager;
             newWorkerContext = new(this);
             curentWorkerContext = new(this);
             buildingContext = new(this);
+            scoreCounter = new(this);
         }
     }
 }

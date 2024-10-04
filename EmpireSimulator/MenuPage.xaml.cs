@@ -29,6 +29,12 @@ namespace EmpireSimulator
             this.NavigationService.Navigate(gameplayPage);
         }
 
+        public void GoToLiderbord(object sender, RoutedEventArgs e) {
+            LeavePage();
+            ScoresPage scoresPage = new();
+            this.NavigationService.Navigate(scoresPage);
+        }
+
         public void Exit(object sender, RoutedEventArgs e) {
             LeavePage();
             Application.Current.Shutdown();

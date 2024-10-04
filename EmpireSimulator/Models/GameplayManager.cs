@@ -104,11 +104,13 @@ namespace EmpireSimulator.Models
                 context.continuePlaying = false;
                 context.exited = true;
             }
+            context.scoreCounter.Save();
         }
 
         private void MakeTurn() {
             context.turnCounter.NextTurn();
-            logger.LogInformation("next turn");
+            context.scoreCounter.NextTurn();
+            //logger.LogInformation("next turn");
             context.eventContext.Happen();
             context.effectContext.Apply();
         }
@@ -116,6 +118,8 @@ namespace EmpireSimulator.Models
         private void UpdateGui() {
             int turn = context.turnCounter.Count;
             Page.SetTimeCounter(turn);
+            int score = context.scoreCounter.Count;
+            Page.SetScoreCounter(score);
             Page.SetProgressBars(context.newWorkerContext);
             context.resoursesContext.UpdateResourses(context.newWorkerContext);
             Page.SetResourses(context.resoursesContext);
@@ -136,6 +140,10 @@ namespace EmpireSimulator.Models
                 var effect = expired.Pop();
                 Page.RemoveEffect(effect);
             }
+        }
+
+        public void SetEmpireName(string name) {
+            context.EmpireName = name;
         }
 
         private void GetNextTurnData() {
